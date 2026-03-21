@@ -34,30 +34,70 @@ namespace PametnaHisa
             if (Luc.Checked)
             {
                 trenutnaNaprava = new Luc(ime, "LED", 0, "NE");
+                trenutnaNaprava.OnStatusChanged += (napravaObj, msg) =>
+                {
+                    listBox1.Items.Add(msg);
+                };
                 MessageBox.Show("Luč ustvarjena.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
             else if (Alarm.Checked)
             {
                 trenutnaNaprava = new Alarm(ime, 0, "");
+                Alarm alarm = (Alarm)trenutnaNaprava;
+
+                alarm.AlarmTriggered += (s, ev) =>
+                {
+                    MessageBox.Show("ALARM SPROŽEN!");
+                    listBox1.Items.Add("ALARM sprožen!");
+                };
+                trenutnaNaprava.OnStatusChanged += (napravaObj, msg) =>
+                {
+                    listBox1.Items.Add(msg);
+                };
                 MessageBox.Show("Alarm je ustvarjen.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
             else if (Termostat.Checked)
             {
                 trenutnaNaprava = new Termostat(ime, 0, "");
+                Termostat t = (Termostat)trenutnaNaprava;
+
+                t.TemperaturaChanged += (temp) =>
+                {
+                    textBox1.Text = $"{temp} °C";
+
+                    if (temp > 30)
+                        textBox1.BackColor = Color.Red;
+                    else if (temp < 10)
+                        textBox1.BackColor = Color.LightBlue;
+                    else
+                        textBox1.BackColor = Color.White;
+                };
+                trenutnaNaprava.OnStatusChanged += (napravaObj, msg) =>
+                {
+                    listBox1.Items.Add(msg);
+                };
                 MessageBox.Show("Termostat je ustvarjen.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
             else if (Roleta.Checked)
             {
                 trenutnaNaprava = new Roleta(ime, "");
+                trenutnaNaprava.OnStatusChanged += (napravaObj, msg) =>
+                {
+                    listBox1.Items.Add(msg);
+                };
                 MessageBox.Show("Roleta je ustvarjen.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
             else
             {
                 trenutnaNaprava = new Klima(ime, 0, "", "NE");
+                trenutnaNaprava.OnStatusChanged += (napravaObj, msg) =>
+                {
+                    listBox1.Items.Add(msg);
+                };
                 MessageBox.Show("Roleta je ustvarjen.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
@@ -236,6 +276,20 @@ namespace PametnaHisa
             Stevilo.Clear();
             Poraba.Clear();
             celotnaPoraba.Clear();
+        }
+
+        private void VklopiVseNaprave(object sender, EventArgs e)
+        {
+            Upravljalnik upravljalnik = new Upravljalnik();
+
+            upravljalnik.IzvediNaVseh(seznamNaprav.VrniVse(), n => n.Vklopi());
+        }
+
+        private void IzklopiVseNaprave(object sender, EventArgs e)
+        {
+            Upravljalnik upravljalnik1 = new Upravljalnik();
+
+            upravljalnik1.IzvediNaVseh(seznamNaprav.VrniVse(), n => n.Izklopi());
         }
     }
 }

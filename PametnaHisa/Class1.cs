@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace RazrediNaprav
 {
+    public delegate void AkcijaNaprave(Naprave n);
+
     interface ITemperaturnaNaprava
     {
         int IzpisTemparature();
@@ -46,10 +49,12 @@ namespace RazrediNaprav
         public void Vklopi()
         {
             Vklopljena = true;
+            SporociSpremembo($"{Ime} je vklopjena!");
         }
         public void Izklopi()
         {
             Vklopljena = false;
+            SporociSpremembo($"{Ime} je izklopljena!");
         }
         public virtual double PorabaEnergije()
         {
@@ -109,6 +114,13 @@ namespace RazrediNaprav
         public override string ToString()
         {
             return $"{Ime} , Vklopljena: {Vklopljena})";
+        }
+
+        public event EventHandler<string> OnStatusChanged;
+
+        protected void SporociSpremembo(string msg)
+        {
+            OnStatusChanged?.Invoke(this, msg);
         }
     }
     public class Luc : Naprave, IVarnost
@@ -184,6 +196,8 @@ namespace RazrediNaprav
             set { vklopljen = value; }
         }
 
+        public event EventHandler AlarmTriggered;
+
         public Alarm(string ime, int g, string m) : base(ime)
         {
             glasnost = g;
@@ -218,6 +232,12 @@ namespace RazrediNaprav
                 return false;
             }
         }
+
+        public void SproziAlarm()
+        {
+            Aktiviran = true;
+            AlarmTriggered?.Invoke(this, EventArgs.Empty);
+        }
     }
     public class Termostat : Naprave, ITemperaturnaNaprava , IVarnost
     {
@@ -230,6 +250,7 @@ namespace RazrediNaprav
             set { _geslo = value; }
         }
 
+        public event Action<int> TemperaturaChanged;
         public string Temp_Mode
         {
             get { return temp_mode; }
@@ -254,7 +275,7 @@ namespace RazrediNaprav
         public void SpremeniTemp(int t)
         {
             temperatura += t;
-            Console.WriteLine("Temparatua v hiši je: " + temperatura);
+            TemperaturaChanged?.Invoke(temperatura);
         }
 
         public int IzpisTemparature()
@@ -434,6 +455,17 @@ namespace RazrediNaprav
             }
 
             return vsota;
+        }
+    }
+
+    public class Upravljalnik
+    {
+        public void IzvediNaVseh(List<Naprave> naprave, AkcijaNaprave akcija)
+        {
+            foreach (var n in naprave)
+            {
+                akcija(n);
+            }
         }
     }
 }
