@@ -56,6 +56,7 @@ namespace PametnaHisa
             {
                 klima.PoletnoHlajenje = false;
             }
+            this.Close();
         }
     }
 }

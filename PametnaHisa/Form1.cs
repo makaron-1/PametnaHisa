@@ -103,10 +103,10 @@ namespace PametnaHisa
                 {
                     listBox1.Items.Add(msg);
                 };
-                MessageBox.Show("Roleta je ustvarjen.");
+                MessageBox.Show("Klima je ustvarjen.");
                 seznamNaprav.Dodaj(trenutnaNaprava);
             }
-            Stevilo.Text = Naprave.VrniSteviloNaprav().ToString()+"W";
+            Stevilo.Text = Naprave.VrniSteviloNaprav().ToString();
         }
 
         /// <summary>
