@@ -18,6 +18,9 @@ namespace PametnaHisa
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Vrne ali je vneseno geslo pravilno in zapre okno. Nastavi DialogResult na OK, da signalizira uspešno vnos gesla.
+        /// </summary>
         private void btnOK_Click(object sender, EventArgs e)
         {
             VnesenoGeslo = txtGeslo.Text;

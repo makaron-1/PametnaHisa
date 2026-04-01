@@ -28,6 +28,10 @@ namespace PametnaHisa
             textBox1.Text = alarm.glasnost.ToString();
         }
 
+        /// <summary>
+        /// Potrdi gumb posodobi nastavitve alarma glede na vnešene vrednosti in zapre okno. 
+        /// Vrne sporočilo o uspešno posodobljenih nastavitvah.
+        /// </summary>
         private void Potrdi_Click(object sender, EventArgs e)
         {
             alarm.glasnost = int.Parse(textBox1.Text);

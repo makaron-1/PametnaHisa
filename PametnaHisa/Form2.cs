@@ -32,6 +32,10 @@ namespace PametnaHisa
             else luc.dim_mode = false;
         }
 
+        /// <summary>
+        /// Potrdi gumb posodobi nastavitve luči glede na vnešene vrednosti in zapre okno. 
+        /// Vrne sporočilo o uspešno posodobljenih nastavitvah.
+        /// </summary>
         private void Potrdi_Click(object sender, EventArgs e)
         {
             luc.moc_svetlosti = int.Parse(textBox1.Text);

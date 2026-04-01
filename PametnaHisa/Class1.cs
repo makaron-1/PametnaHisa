@@ -46,25 +46,43 @@ namespace RazrediNaprav
             Console.WriteLine($"Naprava {Ime} odstranjena iz pomnilnika.");
         }
 
+        /// <summary>
+        /// Vklopi napravo in sproži dogodek o spremembi statusa.
+        /// </summary>
         public void Vklopi()
         {
             Vklopljena = true;
             SporociSpremembo($"{Ime} je vklopjena!");
         }
+
+        /// <summary>
+        /// Izklopi napravo in sproži dogodek o spremembi statusa.
+        /// </summary>
         public void Izklopi()
         {
             Vklopljena = false;
             SporociSpremembo($"{Ime} je izklopljena!");
         }
+
+        /// <summary>
+        /// Vrne porabo energije naprave.
+        /// </summary>
         public virtual double PorabaEnergije()
         {
             return 0;
         }
+
+        /// <summary>
+        /// Vrne skupno število vseh ustvarjenih naprav.
+        /// </summary>
         public static int VrniSteviloNaprav()
         {
             return StevecNaprav;
         }
 
+        /// <summary>
+        /// Odstrani napravo tako, da jo izklopi in zmanjša števec naprav.
+        /// </summary>
         public void Odstrani()
         {
             Vklopljena = false;
@@ -116,8 +134,14 @@ namespace RazrediNaprav
             return $"{Ime} , Vklopljena: {Vklopljena})";
         }
 
+        /// <summary>
+        /// Dogodek, ki se sproži ob spremembi statusa naprave.
+        /// </summary>
         public event EventHandler<string> OnStatusChanged;
 
+        /// <summary>
+        /// Sproži dogodek o spremembi statusa. Vrne sporočilo glede na statusu naprave (npr. "Luč je vklopljena!").
+        /// </summary>
         protected void SporociSpremembo(string msg)
         {
             OnStatusChanged?.Invoke(this, msg);
@@ -153,6 +177,9 @@ namespace RazrediNaprav
             }
         }
 
+        /// <summary>
+        /// Izračuna porabo energije glede na vrsto žarnice. Vrne neko porabo, če je luč vklopljena, sicer vrne 0.
+        /// </summary>
         public override double PorabaEnergije()
         {
             if (!Vklopljena) return 0;
@@ -164,6 +191,9 @@ namespace RazrediNaprav
             else return 0;
         }
 
+        /// <summary>
+        /// Preveri pravilnost vnesenega gesla za luč. Vrne true, če je geslo pravilno, sicer vrne false.
+        /// </summary>
         public bool VnesiGeslo(string g)
         {
             if(g == geslo)
@@ -196,6 +226,9 @@ namespace RazrediNaprav
             set { vklopljen = value; }
         }
 
+        /// <summary>
+        /// Dogodek, ki se sproži ob aktivaciji alarma.
+        /// </summary>
         public event EventHandler AlarmTriggered;
 
         public Alarm(string ime, int g, string m) : base(ime)
@@ -204,6 +237,9 @@ namespace RazrediNaprav
             melodija = m;
         }
 
+        /// <summary>
+        /// Izklopi alarm, če je aktiven. Vrne sporočilo o izklopu alarma. Če alarm ni aktiven, ne naredi nič.
+        /// </summary>
         public void UgasniAlarm()
         {
             if (vklopljen)
@@ -213,6 +249,9 @@ namespace RazrediNaprav
             }
         }
 
+        /// <summary>
+        /// Izračuna porabo energije alarma. Vrne neko porabo, če je alarm vklopljen, sicer vrne 0.
+        /// </summary>
         public override double PorabaEnergije()
         {
             if (!Vklopljena)
@@ -221,6 +260,9 @@ namespace RazrediNaprav
                 return 10;
         }
 
+        /// <summary>
+        /// Preveri pravilnost gesla za alarm. Vrne true, če je geslo pravilno, sicer vrne false.
+        /// </summary>
         public bool VnesiGeslo(string g)
         {
             if (g == geslo)
@@ -233,6 +275,9 @@ namespace RazrediNaprav
             }
         }
 
+        /// <summary>
+        /// Sproži alarm in obvesti vse naročnike dogodka.
+        /// </summary>
         public void SproziAlarm()
         {
             Aktiviran = true;
@@ -250,6 +295,9 @@ namespace RazrediNaprav
             set { _geslo = value; }
         }
 
+        /// <summary>
+        /// Dogodek, ki se sproži ob spremembi temperature.
+        /// </summary>
         public event Action<int> TemperaturaChanged;
         public string Temp_Mode
         {
@@ -272,23 +320,35 @@ namespace RazrediNaprav
             Temp_Mode = m;
         }
 
+        /// <summary>
+        /// Spremeni temperaturo in sproži dogodek. Vrne novo temperaturo. Če je naprava izklopljena, ne spremeni temperature in ne sproži dogodka.
+        /// </summary>
         public void SpremeniTemp(int t)
         {
             temperatura += t;
             TemperaturaChanged?.Invoke(temperatura);
         }
 
+        /// <summary>
+        /// Vrne trenutno temperaturo. Vrne temperaturo v stopinjah Celzija. Če je naprava izklopljena, vrne 0.
+        /// </summary>
         public int IzpisTemparature()
         {
             return temperatura;
         }
 
+        /// <summary>
+        /// Izračuna porabo energije glede na temperaturo. Vrne neko porabo, če je termostat vklopljen, sicer vrne 0. Poraba se lahko poveča z višjo temperaturo.
+        /// </summary>
         public override double PorabaEnergije()
         {
             if (!Vklopljena) return 0;
             else return 25000;
         }
 
+        /// <summary>
+        /// Preveri pravilnost gesla za termostat. Vrne true, če je geslo pravilno, sicer vrne false.
+        /// </summary>
         public bool VnesiGeslo(string g)
         {
             if (g == geslo)
@@ -315,16 +375,26 @@ namespace RazrediNaprav
         {
             vrsta_rolete = v;
         }
+
+        /// <summary>
+        /// Spusti roleto. Vrne sporočilo o spuščanju rolete. Če je naprava izklopljena, ne spusti rolete in ne vrne sporočila.
+        /// </summary>
         public string Spust_Rolete()
         {
             return "Roleta se je spustila!";
         }
 
+        /// <summary>
+        /// Dvigne roleto. Vrne sporočilo o dviganju rolete. Če je naprava izklopljena, ne dvigne rolete in ne vrne sporočila.
+        /// </summary>
         public string Dvig_Rolete()
         {
             return "Roleta se je dvignila!";
         }
 
+        /// <summary>
+        /// Izračuna porabo energije rolete. Vrne neko porabo, če je roleta vklopljena, sicer vrne 0. Poraba se lahko poveča z večjo velikostjo rolete.
+        /// </summary>
         public override double PorabaEnergije()
         {
             if (!Vklopljena)
@@ -333,6 +403,9 @@ namespace RazrediNaprav
                 return 150;
         }
 
+        /// <summary>
+        /// Preveri pravilnost gesla za roleto. Vrne true, če je geslo pravilno, sicer vrne false.
+        /// </summary>
         public bool VnesiGeslo(string g)
         {
             if (g == geslo)
@@ -377,16 +450,25 @@ namespace RazrediNaprav
             }
         }
 
+        /// <summary>
+        /// Spremeni temperaturo klime. Vrne novo temperaturo.
+        /// </summary>
         public void SpremeniTempKlime(int i)
         {
             temp = i;
         }
 
+        /// <summary>
+        /// Vrne trenutno temperaturo klime.
+        /// </summary>
         public int IzpisTemparature()
         {
             return temp;
         }
 
+        /// <summary>
+        /// Izračuna porabo energije glede na velikost klime. Vrne neko porabo, če je klima vklopljena, sicer vrne 0. Poraba se lahko poveča z večjo velikostjo klime.
+        /// </summary>
         public override double PorabaEnergije()
         {
             if (!Vklopljena)return 0;
@@ -397,6 +479,9 @@ namespace RazrediNaprav
             else return 0;
         }
 
+        /// <summary>
+        /// Preveri pravilnost gesla za klimo. Vrne true, če je geslo pravilno, sicer vrne false.
+        /// </summary>
         public bool VnesiGeslo(string g)
         {
             if (g == geslo)
@@ -413,6 +498,9 @@ namespace RazrediNaprav
     {
         private List<Naprave> naprave = new List<Naprave>();
 
+        /// <summary>
+        /// Doda napravo v seznam. Sprejme objekt tipa Naprave in ga doda v seznam naprav.
+        /// </summary>
         public void Dodaj(Naprave n)
         {
             naprave.Add(n);
@@ -423,6 +511,9 @@ namespace RazrediNaprav
             get { return naprave[index]; }
         }
 
+        /// <summary>
+        /// Vrne seznam vseh naprav. Vrne List<Naprave> z vsemi napravami v seznamu.
+        /// </summary>
         public List<Naprave> VrniVse()
         {
             return naprave;
@@ -433,6 +524,9 @@ namespace RazrediNaprav
 
     public class NocniScenarij : Scenarij
     {
+        /// <summary>
+        /// Izvede nočni scenarij tako, da izklopi vse naprave v seznamu. Sprejme List<Naprave> in za vsako napravo v seznamu pokliče metodo Izklopi(). Po izvedbi scenarija izpiše sporočilo "Nočni način aktiviran.".
+        /// </summary>
         public override void Izvedi(List<Naprave> naprave)
         {
             foreach (var n in naprave)
@@ -445,6 +539,11 @@ namespace RazrediNaprav
 
     public class PorabaServis
     {
+        /// <summary>
+        /// Sproti računa skupno porabo energije vseh naprav ter jo vrne. 
+        /// Sprejme List<Naprave> in za vsako napravo v seznamu pokliče metodo PorabaEnergije() ter sešteje te porabe. 
+        /// Na koncu vrne skupno porabo energije vseh naprav.
+        /// </summary>
         public double SkupnaPoraba(List<Naprave> naprave)
         {
             double vsota = 0;
@@ -460,6 +559,11 @@ namespace RazrediNaprav
 
     public class Upravljalnik
     {
+        /// <summary>
+        /// Izvede dano akcijo na vseh napravah v seznamu. 
+        /// Sprejme List<Naprave> in delegata AkcijaNaprave, ter za vsako napravo v seznamu pokliče akcijo, ki jo določa delegat. 
+        /// Na ta način lahko upravljalnik izvede poljubno akcijo (npr. vklopi, izklopi, spremeni temperaturo) na vseh napravah v seznamu.
+        /// </summary>
         public void IzvediNaVseh(List<Naprave> naprave, AkcijaNaprave akcija)
         {
             foreach (var n in naprave)

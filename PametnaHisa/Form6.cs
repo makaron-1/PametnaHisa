@@ -27,6 +27,10 @@ namespace PametnaHisa
             textBox1.Text = klima.temp.ToString();
         }
 
+        /// <summary>
+        /// Potrdi gumb posodobi nastavitve klime glede na vnešene vrednosti in zapre okno.
+        /// Vnre sporočilo o uspešno posodobljenih nastavitvah.
+        /// </summary>
         private void Potrdi_Click(object sender, EventArgs e)
         {
             klima.temp = int.Parse(textBox1.Text);

@@ -27,6 +27,11 @@ namespace PametnaHisa
             Stevilo.Text = Naprave.VrniSteviloNaprav().ToString();
         }
 
+        /// <summary>
+        /// Ustvari novo napravo glede na izbran tip in jo doda v seznam. Vrne sporočilo, da je bila naprava uspešno ustvarjena. 
+        /// Nato se naroči na dogodek OnStatusChanged, da se vsaka sprememba stanja naprave zabeleži v listBox1. Če je izbran Alarm, se naroči tudi na dogodek AlarmTriggered, ki prikaže sporočilo, ko je alarm sprožen.
+        /// Na koncu se posodobi prikaz števila naprav.
+        /// </summary>
         private void btnDodaj_Click(object sender, EventArgs e)
         {
             string ime = txtIme.Text;
@@ -104,6 +109,12 @@ namespace PametnaHisa
             Stevilo.Text = Naprave.VrniSteviloNaprav().ToString()+"W";
         }
 
+        /// <summary>
+        /// Odpre nastavitve naprave po preverjanju gesla. 
+        /// Če je naprava zaščitena z geslom, se odpre dialog za vnos gesla. 
+        /// Če je geslo pravilno, se odprejo nastavitve naprave glede na njen tip (Luc, Alarm, Termostat, Roleta ali Klima). 
+        /// Po zaprtju nastavitev se posodobi prikaz temperature, če je naprava termostat ali klima.
+        /// </summary>
         private void btnSettings_Click(object sender, EventArgs e)
         {
             if (trenutnaNaprava == null)
@@ -159,6 +170,10 @@ namespace PametnaHisa
             }
         }
 
+        /// <summary>
+        /// Vklopi trenutno napravo in prikaže porabo energije. 
+        /// Če ni izbrana nobena naprava, prikaže sporočilo, da je potrebno najprej dodati napravo.
+        /// </summary>
         private void btnVklopi_Click(object sender, EventArgs e)
         {
             if (trenutnaNaprava != null)
@@ -175,18 +190,28 @@ namespace PametnaHisa
             }
         }
 
+        /// <summary>
+        /// Sproži dogodek za izklop naprave ter jo odstrani s tem da jo deklarira kot null. 
+        /// Prikaže sporočilo, da je naprava odstranjena.
+        /// </summary>
         private void btnIzbris_Click(object sender, EventArgs e)
         {
             trenutnaNaprava.Odstrani();
             trenutnaNaprava = null;
             MessageBox.Show("Naprava odstranjena!");
-        }   
+        }
 
+        /// <summary>
+        /// Pokliče metodo UpdateTemperatureTextBoxVisibility, ki posodobi vidljivost textBox1 glede na to, ali sta klima ali termostat označena.
+        /// </summary>
         private void Klima_CheckedChanged(object sender, EventArgs e)
         {
             UpdateTemperatureTextBoxVisibility();
         }
 
+        /// <summary>
+        /// Posodobi vidljivost textBox1 glede na to, ali sta klima ali termostat označena.
+        /// </summary>
         private void UpdateTemperatureTextBoxVisibility()
         {
             if (Klima.Checked || Termostat.Checked)
@@ -195,11 +220,17 @@ namespace PametnaHisa
                 textBox1.Visible = false;
         }
 
+        /// <summary>
+        /// Pokliče metodo UpdateTemperatureTextBoxVisibility, ki posodobi vidljivost textBox1 glede na to, ali sta klima ali termostat označena.
+        /// </summary>
         private void Termostat_CheckedChanged(object sender, EventArgs e)
         {
             UpdateTemperatureTextBoxVisibility();
         }
-
+        /// <summary>
+        /// Pokliče metodo VrniSteviloNaprav iz razreda Naprave, ki vrne trenutno število naprav v sistemu, in posodobi prikaz v textBoxu Stevilo.
+        /// </summary>
+        /// <returns></returns>
         public int UpdateStNaprav()
         {
             return Naprave.VrniSteviloNaprav();
@@ -210,6 +241,10 @@ namespace PametnaHisa
 
         }
 
+        /// <summary>
+        /// Primerja dve napravi glede na izbran operator.
+        /// Vrne sporočilo o rezultatu primerjave, kot so "Enaki sta", "Nista enaki", "Naprava1 porabi manj/več kot Naprava2" ali skupna poraba obeh naprav.
+        /// </summary>
         private void primerjaj_Click(object sender, EventArgs e)
         {
             textBox4.Clear();
@@ -253,6 +288,11 @@ namespace PametnaHisa
                 textBox4.Text = "Izberi operator!";
             }
         }
+
+        /// <summary>
+        /// Najde napravo v seznamu glede na njeno ime. 
+        /// Če naprava z danim imenom obstaja, jo vrne, sicer vrne null.
+        /// </summary>
         private Naprave NajdiNapravoPoImenu(string ime)
         {
             foreach (Naprave n in seznamNaprav.VrniVse())
@@ -268,6 +308,10 @@ namespace PametnaHisa
 
         }
 
+        /// <summary>
+        /// Izvede nočni scenarij in izklopi vse naprave.
+        /// Izbriše ves tekst iz TextBox-ov.
+        /// </summary>
         private void nightMode_Click(object sender, EventArgs e)
         {
             Scenarij ns = new NocniScenarij();
@@ -278,6 +322,9 @@ namespace PametnaHisa
             celotnaPoraba.Clear();
         }
 
+        /// <summary>
+        /// Vklopi vse naprave v seznamu s pomočjo razreda Upravljalnik, ki ima metodo IzvediNaVseh, ki sprejme seznam naprav in akcijo (v tem primeru klic metode Vklopi za vsako napravo).
+        /// </summary>
         private void VklopiVseNaprave(object sender, EventArgs e)
         {
             Upravljalnik upravljalnik = new Upravljalnik();
@@ -285,6 +332,9 @@ namespace PametnaHisa
             upravljalnik.IzvediNaVseh(seznamNaprav.VrniVse(), n => n.Vklopi());
         }
 
+        /// <summary>
+        /// Izklopi vse naprave v seznamu s pomočjo razreda Upravljalnik, ki ima metodo IzvediNaVseh, ki sprejme seznam naprav in akcijo (v tem primeru klic metode Izklopi za vsako napravo).
+        /// </summary>
         private void IzklopiVseNaprave(object sender, EventArgs e)
         {
             Upravljalnik upravljalnik1 = new Upravljalnik();

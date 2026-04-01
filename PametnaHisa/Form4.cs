@@ -28,6 +28,10 @@ namespace PametnaHisa
             textBox1.Text = termostat.temperatura.ToString();
         }
 
+        /// <summary>
+        /// Potrdi gumb posodobi nastavitve termostata glede na vnešene vrednosti in zapre okno. 
+        /// Vrne sporočilo o uspešno posodobljenih nastavitvah.
+        /// </summary>
         private void Potrdi_Click(object sender, EventArgs e)
         {
             termostat.temperatura = int.Parse(textBox1.Text);
